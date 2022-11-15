@@ -11,17 +11,17 @@ def home():
             names =["Pierre", "Paul", "Corinne"]
     )
 
-# @app.route("/")
-# def template2():
-#     print(os.path.join(os.path.dirname(__file__),"data.yml"))
-#     return render_template(
-#             "templates2.html",
-#             title = "Les 100 meilleurs bouqin de SF",
-#             data = yaml.load(open(
-#                         os.path.join(
-#                         os.path.dirname(__file__),
-#                         "data.yml"
-#                         )
-#                     ), Loader=Loader
-#                 )
-#             )
+@app.route("/test")
+def template2():
+    print(os.path.join(os.path.dirname(__file__),"data.yml"))
+    return render_template(
+            "templates2.html",
+            title = "Les 100 meilleurs bouqin de SF",
+            data = yaml.load(open(
+                        os.path.join(
+                        os.path.dirname(__file__),
+                        "data.yml"
+                        )
+                    ), Loader=Loader
+                )
+            )

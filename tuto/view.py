@@ -1,27 +1,27 @@
 from .app import app
-import yaml , os.path
-from yaml import Loader
+from .models import get_sample
 from flask import render_template
 
 @app.route("/")
 def home():
     return render_template(
             "home.html",
-            title ="Hello World!",
-            names =["Pierre", "Paul", "Corinne"]
+            title ="My Books !",
+            books = get_sample()
     )
 
 @app.route("/test")
 def template2():
-    print(os.path.join(os.path.dirname(__file__),"data.yml"))
+    print(get_sample())
     return render_template(
             "templates2.html",
-            title = "Les 100 meilleurs bouqin de SF",
-            data = yaml.load(open(
-                        os.path.join(
-                        os.path.dirname(__file__),
-                        "data.yml"
-                        )
-                    ), Loader=Loader
-                )
-            )
+            title = "Les 10 meilleurs livres de SF",
+            data = get_sample())
+
+@app.route("/detail/<id>")
+def detail(id):
+    books = get_sample()
+    book = books[int(id)]
+    return render_template(
+        "detail.html",
+        book=book)

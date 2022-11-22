@@ -1,0 +1,12 @@
+section{
+    display: flex;
+}
+img{
+    margin-right: 5%;
+    flex-basis: 15%;
+    height: auto;
+}
+a {
+    text-decoration: none;
+    color: black;
+}

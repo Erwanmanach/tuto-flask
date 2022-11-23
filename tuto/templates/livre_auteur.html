@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block styles %}
+    {{ super() }}
+        <link rel="stylesheet" href="{{ url_for('static',
+        filename='home.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',
+        filename='templates2.css') }}">
+{% endblock %}
+{% block content %}
+    <h1>{{ title }}</h1>
+    <div class="sample">
+        {% for x in books %}
+        <a href="/detail/{{ x.id }}">
+            <img src="{{ url_for('static', filename='images/'+x.img) }}"
+            alt="{{ x.title }}" title="{{ x.title }}">
+        </a>
+        {% endfor %}
+    </div>
+    <a href="/test" id="retour"><button>selection d'un livre</button></a>
+{% endblock %}

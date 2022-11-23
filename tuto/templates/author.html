@@ -7,16 +7,16 @@
         filename='templates2.css') }}">
 {% endblock %}
 {% block content %}
-    <h1>{{ title }}</h1>
+<h1>{{ title }}</h1>
+<section>
     <ul>
-        {% for lignes in data %}
+        {% for auteur in auteurs %}
         <li>
-            <a href="/detail/{{ lignes.id }}">
-                <img src="{{ url_for('static', filename='images/'+lignes.img) }}"
-                alt="{{ lignes.title }}" title="{{ lignes.title }}">
-                le livre  {{ lignes['titles'] }} a été écrit par {{ lignes['author'].name }} et coute {{ lignes['price'] }}
+            <a href="/author/{{ auteur.name }}">
+                auteur {{ auteur.name }}
             </a>
         </li>
         {% endfor %}
     </ul>
+</section>
 {% endblock %}

@@ -22,3 +22,17 @@ footer{
 main > .container {
     padding: 60px 15px 0;
 }
+
+ul{
+    margin-bottom: 125px;
+}
+
+.retour{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.retour>button{
+    margin-top: 25px;
+    border-radius: 5%;
+}

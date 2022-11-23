@@ -4,7 +4,7 @@ class Author(db.Model):
     id = db.Column(db.Integer, primary_key =True)
     name = db.Column(db. String (100))
     def __repr__(self):
-        return "%s" % (self.name)
+        return "<Author (%d) %s>" % (self.id , self.name)
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key =True)
@@ -23,3 +23,12 @@ def get_sample():
 
 def get_all():
     return Book.query.all()
+
+def get_prix(min, max):
+    return Book.query.filter(Book.price >= min).filter(Book.price <= max).all()
+
+def get_author():
+    return Author.query.all()
+
+def get_book_author(name):
+    return Author.query.filter(Author.name==name).one().books.all()

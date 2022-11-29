@@ -1,6 +1,13 @@
-from .app import app
-from .models import get_sample, get_all,get_author, get_book_author,get_prix, Book
-from flask import render_template
+from .app import app, db
+from .models import *
+from flask import render_template, url_for , redirect
+from flask_wtf import FlaskForm
+from wtforms import StringField , HiddenField
+from wtforms.validators import DataRequired
+
+class AuthorForm(FlaskForm):
+    id = HiddenField ('id')
+    name = StringField ('Nom', validators =[ DataRequired ()])
 
 @app.route("/")
 def home():
@@ -31,6 +38,21 @@ def detail(id):
         "detail.html",
         book=book)
 
+@app.route("/save/author/", methods=("POST",))
+def save_author():
+    a = None
+    f = AuthorForm ()
+    if f.validate_on_submit ():
+        id = int(f.id.data)
+        a = get_author_by_id(id)[0]
+        a.name = f.name.data
+        db.session.commit()
+        return redirect( url_for("livre_auteur_id", idauteur=a.id))
+    a = get_author(int(f.id.data))
+    return render_template (
+        "edit-author.html",
+        author=a, form=f)
+
 @app.route("/author")
 def auteur():
     return render_template(
@@ -38,10 +60,32 @@ def auteur():
         auteurs=get_author()
     )
 
-@app.route("/author/<name>")
-def livre_auteur(name):
+@app.route("/author/<string:name>")
+def livre_auteur_name(name):
     return render_template(
         "livre_auteur.html",
         title = "livre écrit par " + name,
         books = get_book_author(""+name)
     )
+
+@app.route("/author/<int:idauteur>")
+def livre_auteur_id(idauteur):
+    nom = get_author_by_id(idauteur)[0].name
+    return render_template(
+        "livre_auteur.html",
+        title = "livre écrit par " + nom,
+        books = get_book_author("" + nom)
+    )
+
+
+@app.route("/edit/author/<int:id>")
+def edit_author(id):
+    a = get_author_by_id(id)
+    if len(a) != 0:
+        a = a[0]
+        f = AuthorForm(id=a.id, name=a.name)
+        return render_template(
+                "edit-author.html",
+                author=a, form=f)
+    else:
+        

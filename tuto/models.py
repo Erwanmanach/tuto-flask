@@ -30,5 +30,8 @@ def get_prix(min, max):
 def get_author():
     return Author.query.all()
 
+def get_author_by_id(id):
+    return Author.query.filter(Author.id==id).all()
+
 def get_book_author(name):
     return Author.query.filter(Author.name==name).one().books.all()

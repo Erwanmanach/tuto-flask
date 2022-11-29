@@ -4,6 +4,7 @@ import os.path
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask ( __name__ )
+app.config['SECRET_KEY'] = "41001fb5-a88c-4779-ac84-0baf15daffdc"
 app.config['BOOTSTRAP_SERVE_LOCAL'] = True
 Bootstrap(app)
 def mkpath (p):

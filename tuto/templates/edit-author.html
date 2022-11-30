@@ -17,9 +17,9 @@
         "form-group "
         {% endif %}
         >
-        {{ form.name.label }} {{ form.name(size=50, class_ ="form-control " ) }}
+        {{ form.name.label }} {{ form.name(size=50, class_="form-control " ) }}
     </div>
-    {% if form.name. errors %}
+    {% if form.name.errors %}
         <ul class ="list - group">
             {% for e in form.name. errors %}
             <li class ="list-group-item list-group-item-danger" >{{ e }} </li >

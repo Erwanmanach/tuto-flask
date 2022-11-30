@@ -6,8 +6,8 @@ from wtforms import StringField , HiddenField
 from wtforms.validators import DataRequired
 
 class AuthorForm(FlaskForm):
-    id = HiddenField ('id')
-    name = StringField ('Nom', validators =[ DataRequired ()])
+    id = HiddenField('id')
+    name = StringField('Nom', validators =[ DataRequired ()])
 
 @app.route("/")
 def home():
@@ -43,12 +43,24 @@ def save_author():
     a = None
     f = AuthorForm ()
     if f.validate_on_submit ():
-        id = int(f.id.data)
-        a = get_author_by_id(id)[0]
-        a.name = f.name.data
-        db.session.commit()
-        return redirect( url_for("livre_auteur_id", idauteur=a.id))
-    a = get_author(int(f.id.data))
+        if not get_autheur_existe(f.name.data):
+            if f.id.data == "":
+                o = Author(name=f.name.data)
+                db.session.add(o)
+                db.session.commit()
+                id = get_id_max()
+            else:
+                id = int(f.id.data)
+                a = get_author_by_id(id)[0]
+                a.name = f.name.data
+                db.session.commit()
+            return redirect( url_for("livre_auteur_id", idauteur=id))
+    if f.id.data == "":
+        a = dict()
+        a["id"] = None
+        a["name"] = f.name.data
+    else:
+        a = get_author(int(f.id.data))
     return render_template (
         "edit-author.html",
         author=a, form=f)
@@ -84,8 +96,12 @@ def edit_author(id):
     if len(a) != 0:
         a = a[0]
         f = AuthorForm(id=a.id, name=a.name)
-        return render_template(
-                "edit-author.html",
-                author=a, form=f)
     else:
-        
+        a = dict()
+        a["name"] = ""
+        a["id"] = None
+        f = AuthorForm(id=a["id"], name=a["name"])
+    return render_template(
+            "edit-author.html",
+            author=a, form=f)
+

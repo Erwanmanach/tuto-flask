@@ -1,4 +1,13 @@
 from .app import db
+from sqlalchemy import func
+from flask_login import UserMixin
+
+class User(db.Model, UserMixin):
+    username = db.Column(db.String(50), primary_key=True)
+    password = db.Column(db.String(64))
+
+    def get_id(self):
+        return self.username
 
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key =True)
@@ -30,8 +39,14 @@ def get_prix(min, max):
 def get_author():
     return Author.query.all()
 
+def get_id_max():
+    return db.session.query(func.max(Author.id)).scalar()
+
 def get_author_by_id(id):
     return Author.query.filter(Author.id==id).all()
 
 def get_book_author(name):
     return Author.query.filter(Author.name==name).one().books.all()
+
+def get_autheur_existe(name):
+    return Author.query.filter(Author.name==name).count() == 1

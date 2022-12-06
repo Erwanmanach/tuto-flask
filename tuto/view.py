@@ -2,16 +2,16 @@ from .app import app, db
 from .models import *
 from flask import render_template, url_for , redirect, request
 from flask_wtf import FlaskForm
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, logout_user
 from wtforms import StringField , HiddenField, PasswordField
 from hashlib import sha256
 from wtforms.validators import DataRequired
 
-class LoginForm ( FlaskForm ):
+class LoginForm(FlaskForm):
     username = StringField('Username')
     password = PasswordField('Password')
 
-    def get_authentified_user(self):
+    def get_authenticated_user(self):
         user = User.query.get(self.username.data)
         if user is None:
             return None
@@ -22,7 +22,7 @@ class LoginForm ( FlaskForm ):
 
 class AuthorForm(FlaskForm):
     id = HiddenField('id')
-    name = StringField('Nom', validators =[ DataRequired ()])
+    name = StringField('Nom', validators =[DataRequired()])
 
 @app.route ("/login/", methods =("GET","POST" ,))
 def login():
@@ -31,12 +31,12 @@ def login():
         user = f.get_authenticated_user()
         if user:
             login_user(user)
-            return redirect( url_for ("home"))
-    return render_template (
-            "login html",
+            return redirect(url_for("home"))
+    return render_template(
+            "login.html",
             form=f)
 
-@app.route("/ logout /")
+@app.route("/logout/")
 def logout():
     logout_user()
     return redirect(url_for('home'))

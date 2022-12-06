@@ -1,4 +1,4 @@
-from .app import db
+from .app import db, login_manager
 from sqlalchemy import func
 from flask_login import UserMixin
 
@@ -50,3 +50,7 @@ def get_book_author(name):
 
 def get_autheur_existe(name):
     return Author.query.filter(Author.name==name).count() == 1
+
+@login_manager.user_loader
+def load_user(username):
+    return User.query.get(username)

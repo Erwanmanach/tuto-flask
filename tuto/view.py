@@ -52,16 +52,24 @@ def home():
 
 @app.route("/test")
 def template2():
+    print(22)
     return render_template(
             "templates2.html",
             title = "Les 100 meilleurs livres de SF",
             data = get_all())
 
-@app.route("/test/<min>/<max>")
-def template(min,max):
+@app.route("/test/search", methods=("GET",))
+def research():
     return render_template(
             "templates2.html",
-            title = "Les 100 meilleurs livres de SF",
+            title = "résultat pour " + str(request.args.get('search')),
+            data = get_name(str(request.args.get('search'))))
+
+@app.route("/test/<min>/<max>")
+def recherche_prix(min,max):
+    return render_template(
+            "templates2.html",
+            title = "Les livres entre "+ min +" et "+max,
             data = get_prix(min, max))
 
 @app.route("/detail/<id>")

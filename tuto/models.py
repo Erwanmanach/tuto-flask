@@ -6,6 +6,9 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(50), primary_key=True)
     password = db.Column(db.String(64))
 
+    def __repr__(self):
+        return "<User (%d)>" % (self.username )
+
     def get_id(self):
         return self.username
 
@@ -24,14 +27,17 @@ class Book(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey ("author.id"))
     author = db.relationship("Author",
         backref=db.backref("books", lazy="dynamic"))
+
     def __repr__ (self ):
         return "<Book (%d) %s>" % (self.id , self.title)
 
-class bibli(db.Model):
+class Commentaire(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.String, db.ForeignKey("user.username"))
+    user = db.relationship("User",
+        backref=db.backref("users", lazy="dynamic"))
     id_book = db.Column(db.Integer, db.ForeignKey("book.id"))
-    commentraire = db.Column(db.String)
+    commentaire = db.Column(db.String)
 
 
 def get_sample():
@@ -67,4 +73,10 @@ def load_user(username):
     return User.query.get(username)
 
 def get_books(id):
-    return Book.query.filter(Book.id==bibli.id_book & bibli.id_user == id).all()
+    return Book.query.filter(Book.id==Commentaire.id_book & Commentaire.id_user == id).all()
+
+def get_commentaire(id):
+    return Commentaire.query.filter(Commentaire.id_book==id).all()
+
+def get_id_commentaire_max():
+    return db.session.query(func.max(Commentaire.id)).scalar()

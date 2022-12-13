@@ -43,6 +43,10 @@ def get_all():
 def get_prix(min, max):
     return Book.query.filter(Book.price >= min).filter(Book.price <= max).all()
 
+def get_name(name):
+    search = "%{}%".format(name)
+    return Book.query.filter(Book.title.like(search)).all()
+
 def get_author():
     return Author.query.all()
 

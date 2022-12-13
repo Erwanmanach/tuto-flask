@@ -63,3 +63,12 @@ def passwd(username , password ):
     user = User.query.filter(User.username==username).one()
     user.password = m.hexdigest()
     db.session.commit()
+
+@app.cli. command ()
+@click.argument("user_id")
+@click.argument("book_id")
+def addbook(user_id, book_id):
+    """Add a book to a bibliothèque. """
+    from .models import bibli
+    bibli.books.append(user_id, book_id)
+    db.session.commit()

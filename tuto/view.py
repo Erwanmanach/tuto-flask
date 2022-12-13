@@ -146,3 +146,10 @@ def edit_author(id):
             "edit-author.html",
             author=a, form=f)
 
+@app.route("/biblio/<int:id>")
+def biblio(id):
+    return render_template(
+        "biblio.html",
+        title="Ma bibliothèque",
+        books=get_books(id)
+    )

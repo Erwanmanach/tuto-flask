@@ -27,6 +27,13 @@ class Book(db.Model):
     def __repr__ (self ):
         return "<Book (%d) %s>" % (self.id , self.title)
 
+class bibli(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_user = db.Column(db.String, db.ForeignKey("user.username"))
+    id_book = db.Column(db.Integer, db.ForeignKey("book.id"))
+    commentraire = db.Column(db.String)
+
+
 def get_sample():
     return Book.query.limit(10).all()
 
@@ -54,3 +61,6 @@ def get_autheur_existe(name):
 @login_manager.user_loader
 def load_user(username):
     return User.query.get(username)
+
+def get_books(id):
+    return Book.query.filter(Book.id==bibli.id_book & bibli.id_user == id).all()

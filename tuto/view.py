@@ -47,9 +47,10 @@ def logout():
 @app.route("/ajouteCommentaire/<id>", methods=("POST",))
 def ajoute_commentaire(id):
     result = request.form
-    o = Commentaire(id_user=current_user.username,id_book=id,commentaire=result["commentaire"])
-    db.session.add(o)
-    db.session.commit()
+    if result["commentaire"] != "":
+        o = Commentaire(id_user=current_user.username,id_book=id,commentaire=result["commentaire"])
+        db.session.add(o)
+        db.session.commit()
     return redirect(url_for("detail",id=id))
 
 @app.route("/")

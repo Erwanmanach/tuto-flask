@@ -10,3 +10,15 @@ a {
     text-decoration: none;
     color: black;
 }
+
+#commentaire{
+    display: flex;
+}
+
+#commentaire>*{
+    margin: 1%;
+}
+
+#commentaire >input{
+    flex-grow: 1;
+}

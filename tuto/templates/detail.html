@@ -26,7 +26,7 @@
     </div>
         {% if current_user.is_authenticated %}
         <div>
-            <form action="{{ url_for('ajoute_commentaire', id= book.id ) }}" method="post">
+            <form action="{{ url_for('ajoute_commentaire', id= book.id ) }}" method="post" id="commentaire">
                 <label name="commentaire">ajouter un commentaire</label>
                 <input type="text" name="commentaire" id="commentaire">
                 <button type="submit"> ajouter commentaire</button>

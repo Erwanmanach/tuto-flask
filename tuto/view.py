@@ -74,6 +74,13 @@ def research():
             title = "résultat pour " + str(request.args.get('search')),
             data = get_name(str(request.args.get('search'))))
 
+@app.route("/research/prix", methods=("POST","GET"))
+def lance_prix():
+    result = request.form
+    print(result)
+    return redirect(url_for("recherche_prix",min = result["prixmini"],max = result["prixmaxi"]))
+    
+
 @app.route("/test/<min>/<max>")
 def recherche_prix(min,max):
     return render_template(

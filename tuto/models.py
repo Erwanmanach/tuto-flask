@@ -6,6 +6,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(50), primary_key=True)
     password = db.Column(db.String(64))
 
+
     def get_id(self):
         return self.username
 
@@ -27,7 +28,7 @@ class Book(db.Model):
     def __repr__ (self ):
         return "<Book (%d) %s>" % (self.id , self.title)
 
-class bibli(db.Model):
+class Bibli(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.String, db.ForeignKey("user.username"))
     id_book = db.Column(db.Integer, db.ForeignKey("book.id"))
@@ -67,4 +68,19 @@ def load_user(username):
     return User.query.get(username)
 
 def get_books(id):
-    return Book.query.filter(Book.id==bibli.id_book & bibli.id_user == id).all()
+    x = Bibli.query.filter(Bibli.id_user == id).all()
+    y = []
+    for i in x:
+        y.append(i.id_book)
+    return Book.query.filter(Book.id.in_(y)).all()
+
+
+
+def add_book(id_user, id_book):
+    t = Bibli.query.filter().count() +1
+    b = Bibli(id=t,id_user=id_user, id_book=id_book, commentraire="")
+    db.session.add(b)
+    db.session.commit()
+
+def inbibli(id):
+    return Bibli.query.filter(Bibli.id_book == id).count() == 1

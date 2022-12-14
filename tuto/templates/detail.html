@@ -7,32 +7,32 @@
         filename='detail.css') }}">
 {% endblock %}
 {% block content %}
-    <h1>{{ book.title }}</h1>
-    <section>
-        <img src="{{ url_for('static', filename='images/'+book.img) }}"
-        alt="{{ book.title }}" title="{{ book.title }}">
-        <a href="{{ book.url }}">
-            <p> l'auteur de ce livre est {{ book.author.name }} </p>
-            <p> il coute {{ book.price }}</p>
-        </a>
-    </section>
-    <div id="divbutton">
-        <a href="/test" id="retour"><button>retour à la selection d'un livre</button></a>
-    </div>
-    {% if current_user.is_authenticated %}
-    <div>
-        <form action="{{ url_for('ajoute_commentaire', id= book.id ) }}" method="post">
-            <label name="commentaire">ajouter un commentaire</label>
-            <input type="text" name="commentaire" id="commentaire">
-            <button type="submit"> ajouter commentaire</button>
-        </form>
-    </div>
-    {% endif %}
-    <ul>
-        {% for lignes in commentaire %}
-        <li>
-            {{ lignes['user'].username }} : {{ lignes['commentaire'] }}
-        </li>
-        {% endfor %}
-    </ul>
+        <h1>{{ book.title }}</h1>
+        <section>
+            <img src="{{ url_for('static', filename='images/'+book.img) }}"
+            alt="{{ book.title }}" title="{{ book.title }}">
+            <a href="{{ book.url }}">
+                <p> l'auteur de ce livre est {{ book.author.name }} </p>
+                <p> il coute {{ book.price }}</p>
+            </a>
+        </section>
+        <div id="divbutton">
+            <a href="/test" id="retour"><button>retour à la selection d'un livre</button></a>
+        </div>
+        {% if current_user.is_authenticated %}
+        <div>
+            <form action="{{ url_for('ajoute_commentaire', id= book.id ) }}" method="post">
+                <label name="commentaire">ajouter un commentaire</label>
+                <input type="text" name="commentaire" id="commentaire">
+                <button type="submit"> ajouter commentaire</button>
+            </form>
+        </div>
+        {% endif %}
+        <ul>
+            {% for lignes in commentaire %}
+            <li>
+                {{ lignes['user'].username }} : {{ lignes['commentaire'] }}
+            </li>
+            {% endfor %}
+        </ul>
 {% endblock %}

@@ -46,7 +46,7 @@ def newuser(username , password ):
     from .models import User
     from hashlib import sha256
     m = sha256()
-    m. update(password.encode())
+    m.update(password.encode())
     u = User( username=username , password=m.hexdigest())
     db.session.add(u)
     db.session.commit()

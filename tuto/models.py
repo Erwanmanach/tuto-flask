@@ -86,7 +86,7 @@ def get_books(id):
 
 def add_book(id_user, id_book):
     t = Commentaire.query.filter().count() +1
-    b = Commentaire (id=t,id_user=id_user, id_book=id_book, commentraire="")
+    b = Commentaire (id=t,id_user=id_user, id_book=id_book, commentaire="")
     db.session.add(b)
     db.session.commit()
 

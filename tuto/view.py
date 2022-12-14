@@ -20,6 +20,26 @@ class LoginForm(FlaskForm):
         passwd = m.hexdigest()
         return user if passwd == user.password else None
 
+
+class RegisterForm(FlaskForm):
+    username = StringField('Username')
+    password = PasswordField('Password')
+
+    def get_authenticated_user(self):
+        user = User.query.get(self.username.data)
+        if user is None:
+            return False
+        else:
+            return True
+
+    def add_user(self):
+        passwd = sha256(self.password.data.encode()).hexdigest()
+        user = User(username=self.username.data, password=passwd)
+        db.session.add(user)
+        db.session.commit()
+
+
+
 class AuthorForm(FlaskForm):
     id = HiddenField('id')
     name = StringField('Nom', validators =[DataRequired()])
@@ -186,3 +206,18 @@ def biblio2(id):
         title="La selection du mois",
         books=get_sample()
     )
+
+@app.route("/register/", methods =("GET","POST" ,))
+def register():
+    f = RegisterForm()
+    if f.validate_on_submit():
+        user = f.get_authenticated_user()
+        if user:
+            login_user(user)
+        else:
+            f.add_user()
+
+        return redirect(url_for("home"))
+    return render_template(
+        "register.html",
+        form=f)

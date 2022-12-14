@@ -1,6 +1,6 @@
 from .app import app, db
 from .models import *
-from flask import render_template, url_for , redirect, request
+from flask import render_template, url_for, redirect, request, flash
 from flask_wtf import FlaskForm
 from flask_login import login_user, logout_user, current_user
 from wtforms import StringField , HiddenField, PasswordField
@@ -164,10 +164,24 @@ def edit_author(id):
             "edit-author.html",
             author=a, form=f)
 
-@app.route("/biblio/<int:id>")
-def biblio(id):
+@app.route("/biblio")
+def biblio():
     return render_template(
         "biblio.html",
         title="Ma bibliothèque",
-        books=get_books(id)
+        books=get_books('denys')
+    )
+
+@app.route("/home/<int:id>")
+def biblio2(id):
+    if (not inbibli(id)):
+        add_book(current_user.username, id)
+        flash("Le livre a été ajouté à votre bibliothèque")
+    else:
+        flash("Le livre est déjà dans votre bibliothèque")
+
+    return render_template(
+        "home.html",
+        title="La selection du mois",
+        books=get_sample()
     )

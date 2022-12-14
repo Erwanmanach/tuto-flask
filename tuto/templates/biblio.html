@@ -9,11 +9,14 @@
 {% block content %}
     <h1>{{ title }}</h1>
     <div class="sample">
+    <ul>
         {% for x in books %}
-        <a href="/detail/{{ x.id }}">
+        <li><a href="/detail/{{ x.id }}">
             <img src="{{ url_for('static', filename='images/'+x.img) }}"
             alt="{{ x.title }}" title="{{ x.title }}">
         </a>
+        </li>
         {% endfor %}
+    </ul>
     </div>
 {% endblock %}

@@ -9,6 +9,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return "<User (%d)>" % (self.username )
 
+
     def get_id(self):
         return self.username
 
@@ -30,6 +31,7 @@ class Book(db.Model):
 
     def __repr__ (self ):
         return "<Book (%d) %s>" % (self.id , self.title)
+
 
 class Commentaire(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -73,10 +75,27 @@ def load_user(username):
     return User.query.get(username)
 
 def get_books(id):
-    return Book.query.filter(Book.id==Commentaire.id_book & Commentaire.id_user == id).all()
+
+    x = Commentaire.query.filter(Commentaire.id_user == id).all()
+    y = []
+    for i in x:
+        y.append(i.id_book)
+    return Book.query.filter(Book.id.in_(y)).all()
+
+
+
+def add_book(id_user, id_book):
+    t = Commentaire.query.filter().count() +1
+    b = Commentaire (id=t,id_user=id_user, id_book=id_book, commentraire="")
+    db.session.add(b)
+    db.session.commit()
+
+def inbibli(id):
+    return Commentaire.query.filter(Commentaire.id_book == id).count() == 1
 
 def get_commentaire(id):
     return Commentaire.query.filter(Commentaire.id_book==id).all()
 
 def get_id_commentaire_max():
     return db.session.query(func.max(Commentaire.id)).scalar()
+

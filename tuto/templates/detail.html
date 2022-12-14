@@ -7,6 +7,7 @@
         filename='detail.css') }}">
 {% endblock %}
 {% block content %}
+
         <h1>{{ book.title }}</h1>
         <section>
             <img src="{{ url_for('static', filename='images/'+book.img) }}"
@@ -19,6 +20,10 @@
         <div id="divbutton">
             <a href="/test" id="retour"><button>retour à la selection d'un livre</button></a>
         </div>
+        <div id="addbibli">
+        <a href="{{ url_for('biblio2',id=book.id) }}" id="add"><button>ajouter à ma bibliothèque</button></a>
+
+    </div>
         {% if current_user.is_authenticated %}
         <div>
             <form action="{{ url_for('ajoute_commentaire', id= book.id ) }}" method="post">

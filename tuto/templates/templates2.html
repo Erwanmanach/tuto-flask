@@ -5,8 +5,20 @@
         filename='home.css') }}">
         <link rel="stylesheet" href="{{ url_for('static',
         filename='templates2.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',
+        filename='positionselectionlivre.css') }}">
 {% endblock %}
 {% block content %}
+    <div id="gauche">
+        <form action="{{ url_for('lance_prix') }}" method="post" id="recherche">
+            <label for="prixmini">prix minimum</label>
+            <input type="text" name="prixmini" id="prixmini">
+            <label for="prixmaxi">prix maximum</label>
+            <input type="text" name="prixmaxi" id="prixmaxi">
+            <button type="submit"> recherche</button>
+        </form>
+    </div>
+    <div id="main">
     <h1>{{ title }}</h1>
     <ul>
         {% for lignes in data %}
@@ -19,4 +31,5 @@
         </li>
         {% endfor %}
     </ul>
+    </div>
 {% endblock %}

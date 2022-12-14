@@ -24,7 +24,10 @@ class AuthorForm(FlaskForm):
     id = HiddenField('id')
     name = StringField('Nom', validators =[DataRequired()])
 
-@app.route ("/login/", methods =("GET","POST" ,))
+class CommentaireForm(FlaskForm):
+    pass
+
+@app.route("/login/", methods =("GET","POST" ,))
 def login():
     f = LoginForm()
     if f.validate_on_submit():
@@ -41,6 +44,13 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route("/ajouteCommentaire/<id>", methods=("POST",))
+def ajoute_commentaire(id):
+    result = request.form
+    o = Commentaire(id_user=current_user.username,id_book=id,commentaire=result["commentaire"])
+    db.session.add(o)
+    db.session.commit()
+    return redirect(url_for("detail",id=id))
 
 @app.route("/")
 def home():
@@ -52,7 +62,6 @@ def home():
 
 @app.route("/test")
 def template2():
-    print(22)
     return render_template(
             "templates2.html",
             title = "Les 100 meilleurs livres de SF",
@@ -65,6 +74,13 @@ def research():
             title = "résultat pour " + str(request.args.get('search')),
             data = get_name(str(request.args.get('search'))))
 
+@app.route("/research/prix", methods=("POST","GET"))
+def lance_prix():
+    result = request.form
+    print(result)
+    return redirect(url_for("recherche_prix",min = result["prixmini"],max = result["prixmaxi"]))
+    
+
 @app.route("/test/<min>/<max>")
 def recherche_prix(min,max):
     return render_template(
@@ -75,15 +91,17 @@ def recherche_prix(min,max):
 @app.route("/detail/<id>")
 def detail(id):
     book = Book.query.get_or_404(id)
+    commentaire = get_commentaire(id)
     return render_template(
         "detail.html",
-        book=book)
+        book=book,
+        commentaire=commentaire)
 
 @app.route("/save/author/", methods=("POST",))
 def save_author():
     a = None
-    f = AuthorForm ()
-    if f.validate_on_submit ():
+    f = AuthorForm()
+    if f.validate_on_submit():
         if not get_autheur_existe(f.name.data):
             if f.id.data == "":
                 o = Author(name=f.name.data)

@@ -6,6 +6,9 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(50), primary_key=True)
     password = db.Column(db.String(64))
 
+    def __repr__(self):
+        return "<User (%d)>" % (self.username )
+
 
     def get_id(self):
         return self.username
@@ -25,14 +28,18 @@ class Book(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey ("author.id"))
     author = db.relationship("Author",
         backref=db.backref("books", lazy="dynamic"))
+
     def __repr__ (self ):
         return "<Book (%d) %s>" % (self.id , self.title)
 
-class Bibli(db.Model):
+
+class Commentaire(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.String, db.ForeignKey("user.username"))
+    user = db.relationship("User",
+        backref=db.backref("users", lazy="dynamic"))
     id_book = db.Column(db.Integer, db.ForeignKey("book.id"))
-    commentraire = db.Column(db.String)
+    commentaire = db.Column(db.String)
 
 
 def get_sample():
@@ -68,7 +75,8 @@ def load_user(username):
     return User.query.get(username)
 
 def get_books(id):
-    x = Bibli.query.filter(Bibli.id_user == id).all()
+
+    x = Commentaire.query.filter(Commentaire.id_user == id).all()
     y = []
     for i in x:
         y.append(i.id_book)
@@ -77,10 +85,17 @@ def get_books(id):
 
 
 def add_book(id_user, id_book):
-    t = Bibli.query.filter().count() +1
-    b = Bibli(id=t,id_user=id_user, id_book=id_book, commentraire="")
+    t = Commentaire.query.filter().count() +1
+    b = Commentaire (id=t,id_user=id_user, id_book=id_book, commentraire="")
     db.session.add(b)
     db.session.commit()
 
 def inbibli(id):
-    return Bibli.query.filter(Bibli.id_book == id).count() == 1
+    return Commentaire.query.filter(Commentaire.id_book == id).count() == 1
+
+def get_commentaire(id):
+    return Commentaire.query.filter(Commentaire.id_book==id).all()
+
+def get_id_commentaire_max():
+    return db.session.query(func.max(Commentaire.id)).scalar()
+

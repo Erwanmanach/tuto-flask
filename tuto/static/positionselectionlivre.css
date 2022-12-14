@@ -1,0 +1,24 @@
+
+.container{
+    display: flex;
+}
+
+#gauche{
+    flex-basis: 25%;
+}
+
+#milieu{
+    flex-basis: 75%;
+}
+
+#recherche{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+#recherche > *{
+    flex-basis: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}

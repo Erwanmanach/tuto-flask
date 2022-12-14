@@ -69,6 +69,6 @@ def passwd(username , password ):
 @click.argument("book_id")
 def addbook(user_id, book_id):
     """Add a book to a bibliothèque. """
-    from .models import bibli
-    bibli.books.append(user_id, book_id)
+    from .models import Bibli
+    Bibli.books.append(user_id, book_id)
     db.session.commit()

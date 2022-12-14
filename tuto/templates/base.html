@@ -50,7 +50,7 @@
             </div>
             <ul class="nav navbar-nav navbar-right" id="log">
                 {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('biblio',id=1) }}">{{ current_user.username }}</a></li>
+                <li><a href="{{ url_for('biblio') }}">{{ current_user.username }}</a></li>
                 <li><a href="{{ url_for('logout') }}">
                 <span class="glyphicon glyphicon-log-out" title ="Logout">
                     deconnexion

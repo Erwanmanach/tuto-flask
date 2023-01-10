@@ -11,3 +11,8 @@ li{
     border: black 1px solid;
     border-radius: 5%;
 }
+.central{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}

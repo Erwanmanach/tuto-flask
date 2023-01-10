@@ -23,10 +23,14 @@
     <ul>
         {% for lignes in data %}
         <li>
-            <a href="/detail/{{ lignes.id }}">
-                <img src="{{ url_for('static', filename='images/'+lignes.img) }}"
-                alt="{{ lignes.title }}" title="{{ lignes.title }}">
-                le livre  {{ lignes['titles'] }} a été écrit par {{ lignes['author'].name }} et coute {{ lignes['price'] }}
+            <a href="/detail/{{ lignes.id }}" class="a_flex">
+                <div class="div_flex1">
+                    <img src="{{ url_for('static', filename='images/'+lignes.img) }}"
+                    alt="{{ lignes.title }}" title="{{ lignes.title }}">
+                </div>
+                <div>
+                    titre : {{ lignes['title'] }} <br> auteur : {{ lignes['author'].name }}<br> prix : {{ lignes['price'] }}
+                </div>
             </a>
         </li>
         {% endfor %}

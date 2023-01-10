@@ -190,7 +190,7 @@ def biblio():
     return render_template(
         "biblio.html",
         title="Ma bibliothèque",
-        books=get_books('denys')
+        books=get_books(current_user.username)
     )
 
 @app.route("/home/<int:id>")

@@ -56,7 +56,7 @@ def get_name(name):
     return Book.query.filter(Book.title.like(search)).all()
 
 def get_author():
-    return Author.query.all()
+    return Author.query.order_by(Author.name.asc()).all()
 
 def get_id_max():
     return db.session.query(func.max(Author.id)).scalar()

@@ -137,14 +137,25 @@ def template2():
             data = get_all(),
             form = result)
 
-@app.route("/test/search", methods=("GET","POST",))
-def research():
-    resultat = request.form
+@app.route("/research/nav", methods=("GET","POST",))
+def researchnav():
+    resultat = Recherche()
+    print(resultat.search)
     result = RechercheForm()
     return render_template(
             "templates2.html",
-            title = "résultat pour " + resultat["search"],
-            data = get_name(resultat["search"]),
+            title = "résultat pour " + resultat["search"].data,
+            data = get_name(resultat["search"].data),
+            form = result
+    )
+
+@app.route("/test/search", methods=("GET","POST",))
+def research():
+    result = RechercheForm()
+    return render_template(
+            "templates2.html",
+            title = "résultat pour " + result["search"],
+            data = get_name(result["search"]),
             form = result)
 
 @app.route("/research/prix", methods=("POST","GET"))

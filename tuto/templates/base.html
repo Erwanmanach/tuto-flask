@@ -40,20 +40,23 @@
                         <a class="nav-link disabled">Disabled</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search"
-                    placeholder="Search" aria-label="Search">
+                <form class="d-flex" role="search" method="POST"
+                    action ="{{ url_for('researchnav') }}">
+                    <input class="form-control me-2" type="text"
+                    placeholder="search" aria-label="search" name="search" id="search">
                     <button class="btn btn-outline-success"
                     type="submit">Search</button>
                 </form>
             </div>
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" id="log">
                 {% if current_user.is_authenticated %}
-                <li><a>{{ current_user.username }}</a></li>
+                <li><a href="{{ url_for('biblio') }}">{{ current_user.username }}</a></li>
                 <li><a href="{{ url_for('logout') }}">
                 <span class="glyphicon glyphicon-log-out" title ="Logout">
                     deconnexion
                 </span></a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}"> Login</a></li>
                 {% endif %}
             </ul>
         </div>

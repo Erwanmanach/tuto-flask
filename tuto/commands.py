@@ -46,7 +46,7 @@ def newuser(username , password ):
     from .models import User
     from hashlib import sha256
     m = sha256()
-    m. update(password.encode())
+    m.update(password.encode())
     u = User( username=username , password=m.hexdigest())
     db.session.add(u)
     db.session.commit()
@@ -62,4 +62,13 @@ def passwd(username , password ):
     m.update(password.encode())
     user = User.query.filter(User.username==username).one()
     user.password = m.hexdigest()
+    db.session.commit()
+
+@app.cli. command ()
+@click.argument("user_id")
+@click.argument("book_id")
+def addbook(user_id, book_id):
+    """Add a book to a bibliothèque. """
+    from .models import Bibli
+    Bibli.books.append(user_id, book_id)
     db.session.commit()

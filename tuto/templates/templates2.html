@@ -5,18 +5,42 @@
         filename='home.css') }}">
         <link rel="stylesheet" href="{{ url_for('static',
         filename='templates2.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',
+        filename='positionselectionlivre.css') }}">
 {% endblock %}
 {% block content %}
+    <div id="gauche">
+        <form action="{{ url_for('lance_recherche') }}" method="post" id="recherche">
+            {{ form.hidden_tag() }}
+            <label for="prix_mini">prix minimum</label>
+            {{ form.prix_mini(class="formulaire_prix") }}
+            <!-- <input type="text" name="prixmini" id="prixmini" class="formulaire_prix"> -->
+            <label for="prix_maxi">prix maximum</label>
+            {{ form.prix_maxi(class="formulaire_prix") }}
+            <!-- <input type="text" name="Prixmaxi" id="Prixmaxi" class="formulaire_prix"> -->
+            <label for="nom_livre">nom livre</label>
+            {{ form.nom_livre(class="formulaire_prix") }}
+            <label for="nom_auteur">nom auteur</label>
+            {{ form.nom_auteur(class="formulaire_prix") }}
+            <button type="submit" id="button_recherche"> recherche</button>
+        </form>
+    </div>
+    <div id="main">
     <h1>{{ title }}</h1>
     <ul>
         {% for lignes in data %}
         <li>
-            <a href="/detail/{{ lignes.id }}">
-                <img src="{{ url_for('static', filename='images/'+lignes.img) }}"
-                alt="{{ lignes.title }}" title="{{ lignes.title }}">
-                le livre  {{ lignes['titles'] }} a été écrit par {{ lignes['author'].name }} et coute {{ lignes['price'] }}
+            <a href="/detail/{{ lignes.id }}" class="a_flex">
+                <div class="div_flex1">
+                    <img src="{{ url_for('static', filename='images/'+lignes.img) }}"
+                    alt="{{ lignes.title }}" title="{{ lignes.title }}">
+                </div>
+                <div>
+                    titre : {{ lignes['title'] }} <br> auteur : {{ lignes['author'].name }}<br> prix : {{ lignes['price'] }}
+                </div>
             </a>
         </li>
         {% endfor %}
     </ul>
+    </div>
 {% endblock %}

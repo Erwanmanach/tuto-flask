@@ -8,12 +8,12 @@
 {% endblock %}
 {% block content %}
 <h1>{{ title }}</h1>
-<section>
-    <ul>
+<section class="central">
+    <ul class="central">
         {% for auteur in auteurs %}
-        <li>
+        <li class="central">
             <a href="/author/{{ auteur.name }}">
-                auteur {{ auteur.name }}
+                {{ auteur.name }}
             </a>
         </li>
         {% endfor %}

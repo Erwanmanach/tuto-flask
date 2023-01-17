@@ -60,6 +60,14 @@ class RechercheForm(FlaskForm):
         print(this.prix_maxi.data)
         return this.prix_maxi.data is None and this.prix_mini.data is None
 
+@app.route("/")
+def home():
+    return render_template(
+            "home.html",
+            title ="La selection du mois",
+            books = get_sample()
+    )
+
 @app.route("/login/", methods =("GET","POST" ,))
 def login():
     f = LoginForm()
@@ -77,22 +85,48 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route("/detail/<id>")
+def detail(id):
+    book = Book.query.get_or_404(id)
+    commentaire = get_commentaire(id)
+    username = ""
+    if current_user.is_authenticated:
+        username = current_user.username
+
+    return render_template(
+        "detail.html",
+        book=book,
+        commentaire=commentaire, inbibli=inbibli(id),hascomment=hascomment(username))
+
 @app.route("/ajouteCommentaire/<id>", methods=("POST",))
 def ajoute_commentaire(id):
     result = request.form
+
     if result["commentaire"] != "":
-        o = Commentaire(id_user=current_user.username,id_book=id,commentaire=result["commentaire"])
+        o = Commentaire(id_user=current_user.username,id_book=id,commentaire=result["commentaire"], note=result["note"])
         db.session.add(o)
         db.session.commit()
     return redirect(url_for("detail",id=id))
 
-@app.route("/")
-def home():
-    return render_template(
-            "home.html",
-            title ="La selection du mois",
-            books = get_sample()
-    )
+@app.route("/delcom/<id>")
+def delcom(id):
+    idb = get_one_commentaire(id,current_user.username).id_book
+    iscomowner = current_user.username == get_one_commentaire(id, current_user.username).id_user
+    if iscomowner:
+        if inCom(id):
+            delCom(id)
+    return redirect(url_for("detail",id=idb))
+
+@app.route("/editcom/<id>", methods=("POST",))
+def editcom(id):
+    result = request.form
+    idb = get_one_commentaire(id, current_user.username).id_book
+    iscomowner = current_user.username == get_one_commentaire(id,current_user.username).id_user
+    if iscomowner:
+        if inCom(id):
+            editCom(id,result["commentaire"],result["note"])
+    return redirect(url_for("detail",id=idb))
+
 
 @app.route("/test", methods=("GET","POST",))
 def template2():
@@ -130,14 +164,6 @@ def recherche_prix(min,max):
             title = "Les livres entre "+ min +" et "+max +" euros",
             data = get_prix(min, max))
 
-@app.route("/detail/<id>")
-def detail(id):
-    book = Book.query.get_or_404(id)
-    commentaire = get_commentaire(id)
-    return render_template(
-        "detail.html",
-        book=book,
-        commentaire=commentaire)
 
 @app.route("/save/author/", methods=("POST",))
 def save_author():
@@ -215,7 +241,7 @@ def biblio():
     )
 
 @app.route("/home/<int:id>")
-def biblio2(id):
+def addbook(id):
     if (not inbibli(id)):
         add_book(current_user.username, id)
         flash("Le livre a été ajouté à votre bibliothèque")
@@ -227,6 +253,17 @@ def biblio2(id):
         title="La selection du mois",
         books=get_sample()
     )
+
+@app.route("/biblio/<int:id>")
+def deletebook(id):
+    if (inbibli(id)):
+        del_book(current_user.username, id)
+        redirect (url_for("biblio"))
+    return render_template(
+        "biblio.html",
+        title="Ma bibliothèque",
+        books=get_books(current_user.username))
+
 
 @app.route("/register/", methods =("GET","POST" ,))
 def register():

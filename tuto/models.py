@@ -1,7 +1,6 @@
 from .app import db, login_manager
 from sqlalchemy import func
-from flask_login import UserMixin
-
+from flask_login import UserMixin, current_user
 class User(db.Model, UserMixin):
     username = db.Column(db.String(50), primary_key=True)
     password = db.Column(db.String(64))
@@ -40,7 +39,17 @@ class Commentaire(db.Model):
         backref=db.backref("users", lazy="dynamic"))
     id_book = db.Column(db.Integer, db.ForeignKey("book.id"))
     commentaire = db.Column(db.String)
+    note = db.Column(db.Integer)
 
+
+class Bibliotheque(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_user = db.Column(db.String, db.ForeignKey("user.username"))
+    user = db.relationship("User",
+                           backref=db.backref("fk_user_Bibliotheque", lazy="dynamic"))
+    id_book = db.Column(db.Integer, db.ForeignKey("book.id"))
+    #unique constraint between id, id_user and id_book
+    __table_args__ = (db.UniqueConstraint('id_user', 'id_book', name='unique_id_user_id_book'),)
 
 def get_sample():
     return Book.query.limit(10).all()
@@ -76,7 +85,7 @@ def load_user(username):
 
 def get_books(id):
 
-    x = Commentaire.query.filter(Commentaire.id_user == id).all()
+    x = Bibliotheque.query.filter(Bibliotheque.id_user == id).all()
     y = []
     for i in x:
         y.append(i.id_book)
@@ -85,17 +94,40 @@ def get_books(id):
 
 
 def add_book(id_user, id_book):
-    t = Commentaire.query.filter().count() +1
-    b = Commentaire (id=t,id_user=id_user, id_book=id_book, commentaire="")
+    b = Bibliotheque (id_user=id_user, id_book=id_book)
     db.session.add(b)
     db.session.commit()
 
-def inbibli(id):
-    return Commentaire.query.filter(Commentaire.id_book == id).count() == 1
+def del_book(id_user, id_book):
+    b = Bibliotheque.query.filter(Bibliotheque.id_user==id_user).filter(Bibliotheque.id_book==id_book).one()
+    db.session.delete(b)
+    db.session.commit()
 
+
+def inbibli(id):
+    return Bibliotheque.query.filter(Bibliotheque.id_book == id).count() == 1
+
+def inCom(id):
+    return Commentaire.query.filter(Commentaire.id == id).count() == 1
+
+def delCom(id):
+    c = Commentaire.query.filter(Commentaire.id == id).one()
+    db.session.delete(c)
+    db.session.commit()
+
+def get_one_commentaire(id, current_user):
+    return Commentaire.query.filter(Commentaire.id_book==id).filter(Commentaire.id_user==current_user).one()
 def get_commentaire(id):
     return Commentaire.query.filter(Commentaire.id_book==id).all()
 
+def editCom(id, com, note):
+    c = Commentaire.query.filter(Commentaire.id == id).one()
+    c.commentaire = com
+    c.note = note
+    db.session.commit()
+
+def hascomment(id):
+    return Commentaire.query.filter(Commentaire.id_user==id).count() == 1
 def get_id_commentaire_max():
     return db.session.query(func.max(Commentaire.id)).scalar()
 

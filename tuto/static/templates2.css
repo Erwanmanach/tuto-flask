@@ -16,3 +16,11 @@ li{
     margin-left: auto;
     margin-right: auto;
 }
+
+#button_recherche{
+    margin : 5px;
+}
+
+.formulaire_prix{
+    border-radius: 15px;
+}

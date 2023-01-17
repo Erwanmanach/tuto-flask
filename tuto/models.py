@@ -131,3 +131,18 @@ def hascomment(id):
 def get_id_commentaire_max():
     return db.session.query(func.max(Commentaire.id)).scalar()
 
+def obtenir_par_recherche(contrainte):
+    res = Book.query.join(Author)
+    if contrainte.prix_mini.data != "":
+        print(contrainte.prix_mini.data)
+        res = res.filter(Book.price >= int(contrainte.prix_mini.data))
+    if contrainte.prix_maxi.data != "":
+        print(contrainte.prix_maxi.data)
+        res = res.filter(Book.price <= int(contrainte.prix_maxi.data))
+    if contrainte.nom_livre.data != "":
+        search = "%{}%".format(contrainte.nom_livre.data)
+        res = res.filter(Book.title.ilike(search))
+    if contrainte.nom_auteur.data != "":
+        search = "%{}%".format(contrainte.nom_auteur.data)
+        res = res.filter(Author.name.ilike(search))
+    return res.all()

@@ -10,12 +10,19 @@
 {% endblock %}
 {% block content %}
     <div id="gauche">
-        <form action="{{ url_for('lance_prix') }}" method="post" id="recherche">
-            <label for="prixmini">prix minimum</label>
-            <input type="text" name="prixmini" id="prixmini">
-            <label for="prixmaxi">prix maximum</label>
-            <input type="text" name="prixmaxi" id="prixmaxi">
-            <button type="submit"> recherche</button>
+        <form action="{{ url_for('lance_recherche') }}" method="post" id="recherche">
+            {{ form.hidden_tag() }}
+            <label for="prix_mini">prix minimum</label>
+            {{ form.prix_mini(class="formulaire_prix") }}
+            <!-- <input type="text" name="prixmini" id="prixmini" class="formulaire_prix"> -->
+            <label for="prix_maxi">prix maximum</label>
+            {{ form.prix_maxi(class="formulaire_prix") }}
+            <!-- <input type="text" name="Prixmaxi" id="Prixmaxi" class="formulaire_prix"> -->
+            <label for="nom_livre">nom livre</label>
+            {{ form.nom_livre(class="formulaire_prix") }}
+            <label for="nom_auteur">nom auteur</label>
+            {{ form.nom_auteur(class="formulaire_prix") }}
+            <button type="submit" id="button_recherche"> recherche</button>
         </form>
     </div>
     <div id="main">

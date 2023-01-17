@@ -47,7 +47,18 @@ class AuthorForm(FlaskForm):
 class CommentaireForm(FlaskForm):
     pass
 
+class Recherche(FlaskForm):
+    search = StringField('search')
 
+class RechercheForm(FlaskForm):
+    prix_mini = StringField('prixmini')
+    prix_maxi = StringField('Prixmaxi')
+    nom_livre = StringField('Nomlivre')
+    nom_auteur = StringField('NomAuteur')
+
+    def est_vide(this):
+        print(this.prix_maxi.data)
+        return this.prix_maxi.data is None and this.prix_mini.data is None
 
 @app.route("/")
 def home():
@@ -117,32 +128,51 @@ def editcom(id):
     return redirect(url_for("detail",id=idb))
 
 
-@app.route("/test")
+@app.route("/test", methods=("GET","POST",))
 def template2():
+    result = RechercheForm()
     return render_template(
             "templates2.html",
             title = "Les 100 meilleurs livres de SF",
-            data = get_all())
+            data = get_all(),
+            form = result)
 
-@app.route("/test/search", methods=("GET",))
-def research():
+@app.route("/research/nav", methods=("GET","POST",))
+def researchnav():
+    resultat = Recherche()
+    print(resultat.search)
+    result = RechercheForm()
     return render_template(
             "templates2.html",
-            title = "résultat pour " + str(request.args.get('search')),
-            data = get_name(str(request.args.get('search'))))
+            title = "résultat pour " + resultat["search"].data,
+            data = get_name(resultat["search"].data),
+            form = result
+    )
+
+@app.route("/test/search", methods=("GET","POST",))
+def research():
+    result = RechercheForm()
+    return render_template(
+            "templates2.html",
+            title = "résultat pour " + result["search"],
+            data = get_name(result["search"]),
+            form = result)
 
 @app.route("/research/prix", methods=("POST","GET"))
-def lance_prix():
-    result = request.form
-    print(result)
-    return redirect(url_for("recherche_prix",min = result["prixmini"],max = result["prixmaxi"]))
+def lance_recherche():
+    result = RechercheForm()
+    if result.validate_on_submit():
+        return render_template("templates2.html",
+                    title = "recherche", data = obtenir_par_recherche(result),
+                    form = result)
+    return redirect(url_for("template2"))
     
 
 @app.route("/test/<min>/<max>")
 def recherche_prix(min,max):
     return render_template(
             "templates2.html",
-            title = "Les livres entre "+ min +" et "+max,
+            title = "Les livres entre "+ min +" et "+max +" euros",
             data = get_prix(min, max))
 
 

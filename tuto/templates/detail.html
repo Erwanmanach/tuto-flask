@@ -18,27 +18,49 @@
             </a>
         </section>
         <div id="divbutton">
-            <a href="/test" id="retour"><button>retour à la selection d'un livre</button></a>
+            <a href="/test" id="retour"><button class="btn btn-primary">retour à la selection d'un livre</button></a>
         </div>
 
         {% if current_user.is_authenticated %}
+        {% if inbibli %}
+        <div id=deletebilbi>
+            <a href="{{ url_for('deletebook', id=book.id) }}" id="delete"><button class="btn btn-primary">supprimer ce livre de ma bibliothèque</button></a>
+        </div>
+        {% else %}
             <div id="addbibli">
-                <a href="{{ url_for('biblio2',id=book.id) }}" id="add"><button>ajouter à ma bibliothèque</button></a>
+                <a href="{{ url_for('addbook',id=book.id) }}" id="add"><button class="btn btn-primary">ajouter à ma bibliothèque</button></a>
             </div>
+        {% endif %}
         <div>
 
+        {% if not hascomment %}
             <form action="{{ url_for('ajoute_commentaire', id= book.id ) }}" method="post" id="commentaire">
                 <label name="commentaire">ajouter un commentaire</label>
                 <input type="text" name="commentaire" id="commentaire">
-                <button type="submit"> ajouter commentaire</button>
+                <label name="note">note /5 :</label>
+                <input type="number" name="note" id="note" >
+                <button type="submit" class="btn btn-primary"> ajouter commentaire</button>
             </form>
+        {% else %}
+            <form action="{{ url_for('editcom', id= book.id ) }}" method="post" id="commentaire">
+                <label name="commentaire">Commentaire</label>
+                <input type="text" name="commentaire" id="editcom">
+                <label name="note">note /5 :</label>
+                <input type="int" name="note" id="editf">
+                <button type="submit" class="btn btn-primary"> Modifier mon commentaire</button>
+            </form>
+        {% endif %}
         </div>
         {% endif %}
         <ul>
             {% for lignes in commentaire %}
             <li>
-                {{ lignes['user'].username }} : {{ lignes['commentaire'] }}
+                {{ lignes['user'].username }} : {{ lignes['commentaire'] }}; note : {{ lignes['note'] }} {{ lignes.id}}
+                {% if current_user.username == lignes['id_user'] %}
+            <a href="{{ url_for('delcom', id=lignes.id) }}" id="delcom"><button class="btn btn-primary">Supprimer</button></a>
+            {% endif %}
             </li>
+
             {% endfor %}
         </ul>
 {% endblock %}

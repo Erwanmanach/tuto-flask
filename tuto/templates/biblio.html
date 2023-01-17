@@ -14,6 +14,9 @@
         <li><a href="/detail/{{ x.id }}">
             <img src="{{ url_for('static', filename='images/'+x.img) }}"
             alt="{{ x.title }}" title="{{ x.title }}">
+            <a href="{{ url_for('deletebook', id=x.id) }}">
+                <button class="btn btn-primary">Supprimer</button>
+            </a>
         </a>
         </li>
         {% endfor %}

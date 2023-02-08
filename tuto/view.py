@@ -18,8 +18,6 @@ class LoginForm(FlaskForm):
         m = sha256()
         m.update(self.password.data.encode())
         passwd = m.hexdigest()
-        print(passwd)
-        print(user.password)
         return user if passwd == user.password else None
 
 
@@ -301,3 +299,43 @@ def pagePerso():
                 title="Mon espace",
                 books = get_book_author(get_author_by_id(current_user.author_id)[0].name))
     return redirect(url_for("home"))
+
+@app.route("/author/pagePerso/<int:id>")
+def modification_livre(id):
+    book = Book.query.get_or_404(id)
+    formM = ModificationLivre()
+    if current_user.is_authenticated:
+        if current_user.author_id != None:
+            if book.author_id == current_user.author_id:
+                return render_template("modifLivre.html",
+                book=book,
+                form=formM)
+            else:
+                return redirect(url_for("pagePerso"))
+    return redirect("home")
+
+class ModificationLivre(FlaskForm):
+    titre = StringField("titre")
+    prix = StringField("prix")
+    url = StringField("url")
+
+    def sauvegarder(self,id):
+        book = Book.query.get_or_404(id)
+        book.title = self.titre.data
+        book.url = self.url.data
+        book.price = self.prix.data
+        db.session.commit()
+
+@app.route("/sauvegarder/modification/<id>", methods =("GET","POST" ,))
+def sauvegarde_livre(id):
+    formM = ModificationLivre()
+    book = Book.query.get_or_404(id)
+    if current_user.is_authenticated:
+        if current_user.author_id != None:
+            if book.author_id == current_user.author_id:
+                if formM.validate_on_submit():
+                    formM.sauvegarder(book.id)
+                return redirect(url_for("modification_livre",id=book.id))
+            else:
+                return redirect(url_for("pagePerso"))
+    return redirect("home")

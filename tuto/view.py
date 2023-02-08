@@ -339,3 +339,15 @@ def sauvegarde_livre(id):
             else:
                 return redirect(url_for("pagePerso"))
     return redirect("home")
+
+
+@app.route("/delete/livre/<id>")
+def delete_book(id):
+    book = Book.query.get_or_404(id)
+    if current_user.is_authenticated:
+        if current_user.author_id != None:
+            if book.author_id == current_user.author_id:
+                delete_livre(id)
+                return redirect(url_for("pagePerso"))
+            else:
+                return redirect(url_for("pagePerso"))

@@ -34,5 +34,8 @@
             </div>
             <button type="submit"> Modifier</button>
         </form>
+        <a href="{{ url_for('delete_book', id = book.id)}}">
+            <button type="button"> Delete</button>
+        </a>
     </section>
 {% endblock %}

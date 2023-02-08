@@ -150,5 +150,15 @@ def obtenir_par_recherche(contrainte):
         res = res.filter(Author.name.ilike(search))
     return res.all()
 
-def est_auteur(nom):
-    return Author.query.filter(Author.name == nom).count() == 1
+def delete_livre(id):
+    books = Book.query.filter(Book.author_id == id).all()
+    for book in books:
+        for commentaire in Commentaire.query.filter(Commentaire.id_book == book.id):
+            db.session.delete(commentaire)
+            db.session.commit()
+        for appartenance in Bibliotheque.query.filter(Bibliotheque.id_book == book.id):
+            db.session.delete(appartenance)
+            db.session.commit()
+        db.session.delete(book)
+        db.session.commit()
+

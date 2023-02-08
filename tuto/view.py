@@ -18,6 +18,8 @@ class LoginForm(FlaskForm):
         m = sha256()
         m.update(self.password.data.encode())
         passwd = m.hexdigest()
+        print(passwd)
+        print(user.password)
         return user if passwd == user.password else None
 
 
@@ -34,7 +36,7 @@ class RegisterForm(FlaskForm):
 
     def add_user(self):
         passwd = sha256(self.password.data.encode()).hexdigest()
-        user = User(username=self.username.data, password=passwd)
+        user = User(username=self.username.data, password=passwd,author_id = None)
         db.session.add(user)
         db.session.commit()
 

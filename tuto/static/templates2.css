@@ -24,3 +24,7 @@ li{
 .formulaire_prix{
     border-radius: 15px;
 }
+
+#mainpage{
+    background-color: rgba(191, 186, 240, 0.74);
+}

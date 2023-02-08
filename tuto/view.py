@@ -292,3 +292,12 @@ def register():
     return render_template(
         "register.html",
         form=f)
+
+@app.route("/author/pagePerso")
+def pagePerso():
+    if current_user.is_authenticated:
+        if current_user.author_id != None:
+            return render_template("zoneauthor.html",
+                title="Mon espace",
+                books = get_book_author(get_author_by_id(current_user.author_id)[0].name))
+    return redirect(url_for("home"))

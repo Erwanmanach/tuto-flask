@@ -351,3 +351,29 @@ def delete_book(id):
                 return redirect(url_for("pagePerso"))
             else:
                 return redirect(url_for("pagePerso"))
+
+class AjouterLivre(FlaskForm):
+    titre = StringField("titre")
+    image = StringField("image")
+    prix = StringField("prix")
+    url = StringField("url")
+
+    def sauvegarder(self):
+        book = Book(id= get_id_book_max()+1,price=self.prix.data,author_id=current_user.author_id,title = self.titre.data,url = self.url.data)
+        book.img = self.image.data
+        db.session.add(book)
+        db.session.commit()
+
+
+@app.route("/ajouter/livre", methods =("GET","POST" ,))
+def creation_livre():
+    formM = AjouterLivre()
+    if current_user.is_authenticated:
+        if current_user.author_id != None:
+            if formM.validate_on_submit():
+                formM.sauvegarder()
+                return redirect(url_for("pagePerso"))
+            else:
+                return render_template("ajouterlivre.html",
+                                       form=formM)
+    return redirect("home")

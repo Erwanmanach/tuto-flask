@@ -73,6 +73,9 @@ def get_author():
 def get_id_max():
     return db.session.query(func.max(Author.id)).scalar()
 
+def get_id_book_max():
+    return db.session.query(func.max(Book.id)).scalar()
+
 def get_author_by_id(id):
     return Author.query.filter(Author.id==id).all()
 
@@ -151,7 +154,7 @@ def obtenir_par_recherche(contrainte):
     return res.all()
 
 def delete_livre(id):
-    books = Book.query.filter(Book.author_id == id).all()
+    books = Book.query.filter(Book.id == id).all()
     for book in books:
         for commentaire in Commentaire.query.filter(Commentaire.id_book == book.id):
             db.session.delete(commentaire)

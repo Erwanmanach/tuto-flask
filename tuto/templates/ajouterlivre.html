@@ -7,35 +7,35 @@
         filename = 'editLivre.css') }}">
 {% endblock %}
 {% block content %}
-
-    <h1>{{ book.title }}</h1>
+    <h1>Création d'un livre</h1>
     <section>
-        <img src="{{ url_for('static', filename='images/'+book.img) }}"
-        alt="{{ book.title }}" title="{{ book.title }}">
-        <form action="{{ url_for('sauvegarde_livre', id = book.id) }}" method="POST">
+        <form action="{{ url_for('creation_livre') }}" method="POST">
             {{ form.hidden_tag() }}
             <div>
                 <label for="titre">
                     titre du livre :
                 </label>
-                <input type="text" value="{{ book.title }}" name="titre">
+                <input type="text"  name="titre" required>
+            </div>
+            <div>
+                <label for="image">
+                    image du livre :
+                </label>
+                <input type="text"  name="image" required>
             </div>
             <div>
                 <label for="prix">
                     prix du livre :
                 </label>
-                <input type="text" value="{{ book.price }}" name="prix">
+                <input type="number" step="0.01" name="prix" required>
             </div>
             <div>
                 <label for="url">
                     url pour trouver le livre :
                 </label>
-                <input type="text" value="{{ book.url }}" name="url">
+                <input type="text"  name="url" required>
             </div>
-            <button type="submit"> Modifier</button>
+            <button type="submit"> Ajouter le livre</button>
         </form>
-        <a href="{{ url_for('delete_book', id = book.id)}}">
-            <button type="button"> Delete</button>
-        </a>
     </section>
 {% endblock %}

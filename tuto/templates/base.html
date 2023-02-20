@@ -37,9 +37,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/author">author</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled">Disabled</a>
-                    </li>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.author_id != None %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('pagePerso') }}">Mon espace créateur</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
                 </ul>
                 <form class="d-flex" role="search" method="POST"
                     action ="{{ url_for('researchnav') }}">
@@ -65,7 +69,7 @@
     </header>
     <!-- Your page content -->
     <main class="flex-shrink-0">
-        <div class="container">
+        <div class="container" id="mainpage">
         {% block content %}
         {% endblock %}
         </div>

@@ -1,22 +1,25 @@
 from .app import db, login_manager
 from sqlalchemy import func
 from flask_login import UserMixin, current_user
-class User(db.Model, UserMixin):
-    username = db.Column(db.String(50), primary_key=True)
-    password = db.Column(db.String(64))
-
-    def __repr__(self):
-        return "<User (%d)>" % (self.username )
-
-
-    def get_id(self):
-        return self.username
 
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key =True)
     name = db.Column(db. String (100))
     def __repr__(self):
         return "<Author (%d) %s>" % (self.id , self.name)
+
+class User(db.Model, UserMixin):
+    username = db.Column(db.String(50), primary_key=True)
+    password = db.Column(db.String(64))
+    author_id = db.Column(db.Integer, db.ForeignKey ("author.id"))
+    author = db.relationship("Author",
+        backref=db.backref("fk_Author_User", lazy="dynamic"))
+    def __repr__(self):
+        return "<User (%d)>" % (self.username )
+
+
+    def get_id(self):
+        return self.username
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key =True)
@@ -69,6 +72,9 @@ def get_author():
 
 def get_id_max():
     return db.session.query(func.max(Author.id)).scalar()
+
+def get_id_book_max():
+    return db.session.query(func.max(Book.id)).scalar()
 
 def get_author_by_id(id):
     return Author.query.filter(Author.id==id).all()
@@ -146,3 +152,16 @@ def obtenir_par_recherche(contrainte):
         search = "%{}%".format(contrainte.nom_auteur.data)
         res = res.filter(Author.name.ilike(search))
     return res.all()
+
+def delete_livre(id):
+    books = Book.query.filter(Book.id == id).all()
+    for book in books:
+        for commentaire in Commentaire.query.filter(Commentaire.id_book == book.id):
+            db.session.delete(commentaire)
+            db.session.commit()
+        for appartenance in Bibliotheque.query.filter(Bibliotheque.id_book == book.id):
+            db.session.delete(appartenance)
+            db.session.commit()
+        db.session.delete(book)
+        db.session.commit()
+

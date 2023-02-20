@@ -1,4 +1,30 @@
 h1 {
     padding: 3vm;
+}
 
+
+.container div {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.container label{
+    margin: auto;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#mainpage{
+    background-color: rgba(56, 41, 143, 0.829);
+    border-radius: 10px;
+}
+
+a{
+    text-decoration: none;
+}
+
+button{
+    display: block;
+    margin: auto;
 }
